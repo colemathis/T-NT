@@ -46,20 +46,32 @@ def update_propensities(sequences, tau_step):
             """Calculate propensities for each polymer"""
             if seq.len ==1 :       
                 seq.Ap_p = kp*seq.pop*(Nmono-1)
+                seq.Ap_p1 = kp*seq.pop*sequences[1].pop # Propensity of adding 1
+                seq.Ap_p0 = kp*seq.pop*sequences[0].pop # Propensity of adding 0
                 seq.Ap_h = 0
                 seq.Ap_r = 0
                 seq.Ap_d = kd*seq.pop
-            # There is no symmetry breaking below a length 6 polymer
+            
             elif seq.len <= 6:
                 seq.Ap_p = kp*seq.pop*(Nmono)
-                seq.Ap_h = kh*seq.pop*(seq.len-1)
+                seq.Ap_p1 = kp*seq.pop*sequences[1].pop # Propensity of adding 1
+                seq.Ap_p0 = kp*seq.pop*sequences[0].pop # Propensity of adding 0
+                seq.Ap_h = seq.Kh*seq.pop*(seq.len-1)
+                seq.Ap_h1 = kh*seq.pop
                 seq.Ap_r = 0
                 seq.Ap_d = kd*seq.pop
           
             else:
                 seq.Ap_p = kp*seq.pop*Nmono #propensity of polymerization is proportional to rate, the number of polymers, and the number of monomers
+                seq.Ap_p1 = kp*seq.pop*sequences[1].pop # Propensity of adding 1
+                seq.Ap_p0 = kp*seq.pop*sequences[0].pop # Propensity of adding 0
                 seq.Ap_h = seq.Kh*(seq.len-1)*seq.pop # propensity of hydrolosis is proportional to rate, length of sequence and the number of polymers
-                seq.Ap_r = seq.Kr*seq.pop*(float(sequences[0].pop/(1+seq.con[0]))+float(sequences[1].pop/(1+seq.con[1])))
+                seq.Ap_h1 = seq.Kh*seq.pop
+
+                resource_depedence = sequence_dependence(seq.seq_dep)
+                seq.Ap_r = seq.Kr*seq.pop*resource_depedence
+                seq.Ap_r0 = seq.Kr*seq.pop*(float(sequences[0].pop/(1+seq.con[0])))
+                seq.Ap_r1 = seq.Kr*seq.pop*(float(sequences[1].pop/(1+seq.con[1])))
                 seq.Ap_d = kd*seq.pop 
 
             Ap_p += seq.Ap_p
@@ -101,3 +113,16 @@ def initialize_motifs():
         
     if  Parameters.Functional == True : 
          Parameters.F_motifs = binary_sequences.generate_binaries(Parameters.F_N,  Parameters.F_len)
+
+################################################################################
+def sequence_dependence(bonds):
+    import Parameters
+    dependence = 0
+    for bond in bonds:
+        if bond == 0:
+            dependence += Parameters.sequences[0].pop*Parameters.sequences[0].pop
+        elif bond == 1:
+            dependence += Parameters.sequences[1].pop*Parameters.sequences[0].pop
+        elif bond == 2:
+            dependence += Parameters.sequences[1].pop*Parameters.sequences[1].pop
+    return dependence

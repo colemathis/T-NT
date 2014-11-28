@@ -25,12 +25,23 @@ class Polymer(object):
         self.SumPop = 0.0
         self.stable = False
 
+        self.seq_dep = []
+
         self.Kh = 0.0
         self.Kr = 0.0 
         self.Ap_p = 0.0
         self.Ap_h = 0.0
         self.Ap_r = 0.0
         self.Ap_d = 0.0
+
+        self.is_in = [] # List of IDs that this sequence could be made from via hydrolysis
+        self.is_in_degeneracy = [] # The sequence could be in other sequences more than once, this counts that degeneracy
+        self.Ap_p1 = 0.0
+        self.Ap_p0 = 0.0
+        self.Ap_r0 = 0.0
+        self.Ap_r1 = 0.0
+        self.Ap_h1 = 0.0
+       
 
         self.F = False    #if TRUE, sequence contains trivial replicator
         self.F_motifs = []

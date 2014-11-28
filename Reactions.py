@@ -317,12 +317,13 @@ def make_new_polymer(new_sequence, sequences):
 
     # Determine the chemical concentration
     concentrations= determine_monomer_abundances(new_sequence)
-    
+    seq_dep = determine_seq_dependence(new_sequence)
     # Intialize it in the population of sequences
     sequences.extend([Polymer(New_ID, 1, len(new_sequence), new_sequence, concentrations)])
     sequences[New_ID].Kr = float(Parameters.kr*(1.0+(sigmoid(r_a,r_b,r_c, sequences[New_ID].con[0]))) )
     sequences[New_ID].Kh = float(Parameters.kh*(1.0-(sigmoid(f_a, f_b, f_c, sequences[New_ID].con[1]))))
     sequences[New_ID].t_discovery = Parameters.tau
+    sequences[New_ID].seq_dep = seq_dep
     # Look for Non-trivial replication motif
     NT_presence=identify_motifs(new_sequence, Parameters.NT_motifs)
     
@@ -367,6 +368,14 @@ def determine_monomer_abundances(sequence):
             if sequence[(n-1):n] == monomers[i]:
                 concentrations[i] += 1
     return concentrations  
+#####################################################################################################################################
+def determine_seq_dependence(sequence):
+    """ Takes a string of M monomer types, returns a list of the bonds present """
+    bonds  = []
+    for i in range(len(sequence)-1):
+      s = int(sequence[i]) +int(sequence[i+1])
+      bonds.append(s)
+    return bonds
 
 ####################################################################################################################################
 def identify_motifs(sequence, motifs):

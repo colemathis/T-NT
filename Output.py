@@ -35,6 +35,41 @@ def infreq_output(exp,tau, sequences):
 
     #output_landscape(sequences, exp, tau)
 ################################################################################
+# def resource_flow_map(exp, tau, sequences):
+#     for seq in sequences:
+#         filename = ('%iPopluations/'%exp)+seq.seq+'.dat'
+#         # Time      Zero Edge       One Edge    hydrolyzables (seq, weight)
+#         one_edge_weight = 0.0
+#         zero_edge_weight = 0.0
+       
+#         #Flow in via polymerization from below
+#             #One Monomer speices and one polymer
+#         sequence_below = seq.seq[:len(seq.seq)-1]
+#         added_monomer = seq.seq[len(seq.seq)-1:]
+#         sequence_below_ID = Parameters.seq_dict[sequence_below]
+#         if added_monomer == '0':
+#             zero_edge_weight = sequences[sequence_below_ID].Ap_p0
+
+#         elif added_monomer == '1':
+#            one_edge_weight = sequences[sequence_below_ID].Ap_p1
+        
+#         one_edge_weight += seq.Ap_r1
+#         zero_edge_weight += seq.Ap_r0
+#         #Flow in via hydrolysis above
+#             #Many
+#         s = str(tau) + '    '+ str(zero_edge_weight)+ '     '+ str(one_edge_weight)
+
+#         for ID in seq.is_in:
+            
+#         file = open(filename, 'a')
+#         file.write(s)
+#         file.write('\n')
+#         file.close()
+
+        
+
+
+################################################################################
 def particle_number(exp,tau, sequences):
     total_particles = 0.0
     num_replicators = 0.0
